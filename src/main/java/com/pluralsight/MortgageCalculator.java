@@ -18,12 +18,12 @@ public class MortgageCalculator {
         switch (userChoice) {
             case 1 -> displayInterestChoice(input);
             case 2 -> displayCDChoice(input);
-
+            case 3 -> displayPresentValuechoice(input);
         }
     }
 
     public static void displayInterestChoice(Scanner input) {
-        System.out.print("Please enter your principal: ");
+        System.out.print("\nPlease enter your principal: ");
         float principal = input.nextFloat();
         System.out.print("Enter your interest rate: ");
         float interestRate = input.nextFloat();
@@ -33,7 +33,7 @@ public class MortgageCalculator {
     }
 
     public static void displayCDChoice(Scanner input) {
-        System.out.print("Please enter your deposit: ");
+        System.out.print("\nPlease enter your deposit: ");
         float deposit = input.nextFloat();
         System.out.print("Enter your interest rate: ");
         float interestRateCD = input.nextFloat();
@@ -42,17 +42,30 @@ public class MortgageCalculator {
         displayCD(deposit,interestRateCD,depositLength);
     }
 
+    public static void displayPresentValuechoice(Scanner input) {
+        System.out.print("\nPlease enter your expected monthly payout: ");
+        float monthlyPayout = input.nextFloat();
+        System.out.print("Enter your expected interest rate: ");
+        float interestRateAnnuity = input.nextFloat();
+        System.out.print("Enter years to pay out: ");
+        float yearPayOut = input.nextFloat();
+        displayPresentValue(monthlyPayout, interestRateAnnuity, yearPayOut);
+    }
     public static void displayInterest(float principal, float interestRate, float loanLength) {
         double interest = calculateInterest(principal, interestRate, loanLength);
-        System.out.printf("Total interest is: $%.2f%n", interest);
+        System.out.printf("%nTotal interest is: $%.2f%n", interest);
         System.out.printf("Your monthly payment is $%.2f", (interest + principal) / (loanLength * 12));
     }
 
     public static void displayCD(float deposit, float interestRateCD, float depositLength){
         double futureValue = calculateCD( deposit, interestRateCD, depositLength);
-        System.out.printf("Your future value is: $%.2f%n", futureValue);
+        System.out.printf("%nYour future value is: $%.2f%n", futureValue);
         System.out.printf("Your interest earn: $%.2f", futureValue - deposit);
+    }
 
+    public static void displayPresentValue(float monthlyPayOut, float interestRateAnnuity, float yearPayOut){
+        double presentValue = calculatePresentValue( monthlyPayOut, interestRateAnnuity, yearPayOut);
+        System.out.printf("%nYour present value need to invest today is $%.2f%n", presentValue);
     }
     public static double calculateInterest(double p, double rate, double year) {
         double n = year * 12;
@@ -64,9 +77,12 @@ public class MortgageCalculator {
 
     public static double calculateCD(double p, double rate, double t){
         double r = rate / 100;
-        System.out.println(p);
-        double fV = p * Math.pow(1+r/365,365*t);
-        return fV;
+        return p * Math.pow(1+r/365,365*t);
+    }
+    public static double calculatePresentValue(double pMT, double rate, double t){
+        double i = rate/100/12;
+        double n = t * 12;
+        return pMT *(1-Math.pow(1+i,-n))/i;
     }
 }
 
